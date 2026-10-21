@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#fbe3ec">
+<title>Untuk Naura, yang Sedang Berjuang 🌷</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pink:#f9c6d8; --pink-d:#ee8fb0; --pink-dd:#d46a93;
+  --cream:#fff6e8; --lilac:#d9c8f3; --lilac-d:#a98bdc;
+  --ink:#5b4660; --ink-soft:#8a7391; --white:#fffdf9;
+  --hand:'Caveat','Segoe Script','Comic Sans MS',cursive;
+  --sans:'Quicksand','Segoe UI',system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  font-family:var(--sans);color:var(--ink);overflow:hidden;
+  background:linear-gradient(160deg,#ffe6ee 0%,#fff3e3 45%,#e9defa 100%);
+  transition:background 1.6s ease;
+}
+body.night{background:linear-gradient(180deg,#2a2150 0%,#4b3a7d 55%,#8a6aa8 100%);color:#fdf3ff}
+
+/* ===== Background layers ===== */
+#bg{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+.glow{position:absolute;width:70vmax;height:70vmax;left:50%;top:-20vmax;transform:translateX(-50%);
+  background:radial-gradient(circle,rgba(255,236,190,.65) 0%,rgba(255,236,190,0) 60%);
+  animation:breathe 7s ease-in-out infinite}
+body.night .glow{background:radial-gradient(circle,rgba(190,170,255,.35) 0%,rgba(190,170,255,0) 60%)}
+@keyframes breathe{0%,100%{opacity:.7;transform:translateX(-50%) scale(1)}50%{opacity:1;transform:translateX(-50%) scale(1.06)}}
+.cloud{position:absolute;background:#fff;border-radius:60px;opacity:.75;filter:blur(.5px);animation:drift linear infinite}
+.cloud::before,.cloud::after{content:"";position:absolute;background:#fff;border-radius:50%}
+.cloud::before{width:55%;height:160%;left:12%;top:-70%}
+.cloud::after{width:42%;height:130%;right:12%;top:-45%}
+body.night .cloud{opacity:.12}
+@keyframes drift{from{transform:translateX(-30vw)}to{transform:translateX(130vw)}}
+.star{position:absolute;width:6px;height:6px;background:#fff7c9;
+  clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%);
+  animation:twinkle 3s ease-in-out infinite;opacity:.0}
+.star{opacity:.55}
+body.night .star{opacity:1}
+@keyframes twinkle{0%,100%{transform:scale(.6);opacity:.25}50%{transform:scale(1.3);opacity:1}}
+.petal{position:absolute;top:-8vh;width:14px;height:18px;border-radius:70% 0 70% 0;
+  background:linear-gradient(135deg,#ffd3e2,#f59abb);opacity:.8;will-change:transform;
+  animation:fall linear infinite}
+body.night .petal{opacity:.45}
+@keyframes fall{
+  0%{transform:translate3d(0,-8vh,0) rotate(0)}
+  50%{transform:translate3d(30px,55vh,0) rotate(180deg)}
+  100%{transform:translate3d(-20px,110vh,0) rotate(360deg)}}
+
+/* ===== Layout ===== */
+#app{position:relative;z-index:1;height:100%}
+.page{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;
+  padding:max(18px,env(safe-area-inset-top)) 16px max(18px,env(safe-area-inset-bottom));
+  overflow-y:auto;overflow-x:hidden;opacity:0;visibility:hidden;transform:translateY(18px) scale(.985);
+  transition:opacity .7s ease,transform .7s ease,visibility 0s linear .7s}
+.page.active{opacity:1;visibility:visible;transform:none;transition:opacity .7s ease,transform .7s ease}
+.page-inner{width:100%;max-width:520px;margin:auto;display:flex;flex-direction:column;align-items:center;gap:18px;padding:56px 0 20px}
+
+/* top bar */
+#topbar{position:fixed;top:max(10px,env(safe-area-inset-top));left:0;right:0;z-index:20;
+  display:flex;justify-content:space-between;align-items:center;padding:0 14px;pointer-events:none}
+#dots{display:flex;gap:8px;pointer-events:auto}
+.dot{width:10px;height:10px;border-radius:50%;background:rgba(150,120,170,.3);border:0;cursor:default;transition:.4s}
+.dot.visited{background:var(--pink-d);cursor:pointer}
+.dot.current{background:var(--pink-dd);transform:scale(1.35)}
+#music{pointer-events:auto;border:0;border-radius:999px;padding:8px 14px;font:600 .85rem var(--sans);
+  background:rgba(255,255,255,.75);color:var(--ink);box-shadow:0 4px 14px rgba(180,120,160,.25);cursor:pointer;
+  backdrop-filter:blur(6px)}
+#music[aria-pressed="true"]{background:var(--pink-d);color:#fff}
+
+h1{font-family:var(--hand);font-weight:700;font-size:clamp(2rem,8vw,2.8rem);text-align:center;line-height:1.1;color:var(--pink-dd)}
+body.night h1{color:#ffd9ec}
+.sub{font-size:.95rem;color:var(--ink-soft);text-align:center;line-height:1.7;max-width:420px}
+body.night .sub{color:#e6d6f5}
+
+.btn{font:700 1rem var(--sans);border:0;cursor:pointer;border-radius:999px;padding:14px 26px;color:#fff;
+  background:linear-gradient(135deg,#f59abb,#c79af0);box-shadow:0 8px 20px rgba(200,120,170,.4);
+  transition:transform .2s ease,box-shadow .2s ease;min-height:48px}
+.btn:hover{transform:translateY(-2px)}
+.btn:active{transform:scale(.96)}
+.btn.ghost{background:rgba(255,255,255,.8);color:var(--ink);box-shadow:0 4px 12px rgba(160,120,170,.2)}
+body.night .btn.ghost{background:rgba(255,255,255,.18);color:#fff}
+.btn:focus-visible,#music:focus-visible,.dot:focus-visible{outline:3px solid #7b5cc4;outline-offset:3px}
+.row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+
+/* ===== Envelope ===== */
+.env-wrap{perspective:900px;margin-top:6px}
+.envelope{position:relative;width:min(78vw,300px);height:min(52vw,200px);cursor:pointer;
+  animation:float 4s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.env-back,.env-front,.env-flap,.env-paper{position:absolute}
+.env-back{inset:0;background:#f4b3cb;border-radius:10px;box-shadow:0 14px 28px rgba(190,110,150,.35)}
+.env-paper{left:8%;right:8%;top:6%;height:80%;background:var(--white);border-radius:6px;
+  transition:transform 1s ease .35s;display:flex;align-items:center;justify-content:center;
+  font-family:var(--hand);font-size:1.5rem;color:var(--pink-dd)}
+.env-front{inset:0;border-radius:10px;
+  background:linear-gradient(to top right,#f7c1d4 0 50%,transparent 50%) left/50% 100% no-repeat,
+             linear-gradient(to top left,#f9cddd 0 50%,transparent 50%) right/50% 100% no-repeat}
+.env-flap{left:0;right:0;top:0;height:58%;background:#ee9fbd;transform-origin:top;
+  clip-path:polygon(0 0,100% 0,50% 100%);transition:transform .9s ease;z-index:3}
+.seal{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:4;font-size:2rem;transition:opacity .4s;
+  filter:drop-shadow(0 3px 4px rgba(150,60,100,.4))}
+.envelope.open .env-flap{transform:rotateX(180deg)}
+.envelope.open .env-flap{z-index:0}
+.envelope.open .env-paper{transform:translateY(-55%)}
+.envelope.open .seal{opacity:0}
+.envelope.open{animation:none}
+.bubble{background:rgba(255,255,255,.8);border-radius:22px;padding:16px 18px;line-height:1.75;font-size:.98rem;
+  text-align:center;box-shadow:0 8px 24px rgba(190,130,170,.2)}
+
+/* ===== Letter ===== */
+.paper{position:relative;width:100%;background:
+  repeating-linear-gradient(to bottom,transparent 0 33px,rgba(230,170,200,.28) 33px 34px),var(--white);
+  color:#5a4560;border-radius:18px;padding:28px 22px 26px;box-shadow:0 14px 34px rgba(170,110,150,.28);
+  border:1px solid #f6d9e5}
+.paper::before{content:"🌷";position:absolute;top:-16px;right:18px;font-size:1.8rem}
+.paper p{font-family:var(--hand);font-size:clamp(1.3rem,5.2vw,1.55rem);line-height:34px;margin-bottom:34px;
+  opacity:0;transform:translateY(10px);transition:opacity .9s ease,transform .9s ease}
+.paper p.show{opacity:1;transform:none}
+.paper p.big{font-size:clamp(1.5rem,6vw,1.8rem);color:var(--pink-dd);font-weight:700}
+.paper p.sign{text-align:right;margin-bottom:0}
+.paper .q{color:var(--lilac-d)}
+
+/* ===== Interactive ===== */
+.bear-stage{position:relative;width:200px;height:200px}
+.bear-stage svg{width:100%;height:100%;overflow:visible}
+.bear{animation:sway 3.6s ease-in-out infinite;transform-origin:100px 190px}
+@keyframes sway{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(2deg)}}
+.arm{transition:transform .8s cubic-bezier(.5,0,.3,1);transform-box:fill-box;transform-origin:center}
+.pillow{opacity:0;transform:translateY(20px) scale(.6);transition:opacity .6s,transform .6s;transform-box:fill-box;transform-origin:center}
+.bear-stage.hug .pillow{opacity:1;transform:none}
+.bear-stage.hug .arm.l{transform:translate(26px,4px) rotate(30deg)}
+.bear-stage.hug .arm.r{transform:translate(-26px,4px) rotate(-30deg)}
+.bear-stage.hug .flower-held{opacity:0}
+.flower-held{transition:opacity .4s}
+.bear-stage.hug .bear{animation:squish 1.2s ease-in-out 3}
+@keyframes squish{0%,100%{transform:scale(1)}50%{transform:scale(1.04,.96)}}
+.heart-up{position:absolute;bottom:50%;font-size:1.4rem;pointer-events:none;animation:up 2.2s ease-out forwards}
+@keyframes up{from{opacity:1;transform:translateY(0) scale(.6)}to{opacity:0;transform:translateY(-130px) scale(1.2)}}
+.prompt{font-family:var(--hand);font-size:1.6rem;text-align:center;color:var(--pink-dd);line-height:1.25}
+.gifts{display:flex;flex-direction:column;gap:12px;width:100%;max-width:340px}
+.result{min-height:112px;width:100%;background:rgba(255,255,255,.88);border-radius:22px;padding:18px;
+  display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.7;font-size:1.02rem;
+  box-shadow:0 8px 24px rgba(190,130,170,.22);color:var(--ink)}
+.result.pop{animation:pop .6s cubic-bezier(.3,1.5,.5,1)}
+@keyframes pop{from{opacity:0;transform:scale(.85) translateY(10px)}to{opacity:1;transform:none}}
+
+/* ===== Final ===== */
+.moon{width:92px;height:92px;filter:drop-shadow(0 0 18px rgba(255,240,180,.7));animation:float 5s ease-in-out infinite}
+.final-card{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);border-radius:22px;
+  padding:22px 20px;line-height:1.85;font-size:1rem;backdrop-filter:blur(4px);color:#fdf3ff}
+.final-card p+p{margin-top:12px}
+.final-card .from{font-family:var(--hand);font-size:1.45rem;margin-top:16px;color:#ffd9ec;line-height:1.3}
+.sway-flowers{display:flex;gap:18px;font-size:1.8rem;justify-content:center}
+.sway-flowers span{display:inline-block;transform-origin:bottom center;animation:flsway 3.5s ease-in-out infinite}
+.sway-flowers span:nth-child(2){animation-delay:-1s}.sway-flowers span:nth-child(3){animation-delay:-2s}
+.sway-flowers span:nth-child(4){animation-delay:-.5s}.sway-flowers span:nth-child(5){animation-delay:-1.6s}
+@keyframes flsway{0%,100%{transform:rotate(-7deg)}50%{transform:rotate(7deg)}}
+
+/* ===== Bloom overlay ===== */
+#bloom{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(circle at 50% 60%,rgba(255,225,240,.96),rgba(220,200,250,.96));
+  opacity:0;visibility:hidden;transition:opacity .8s,visibility 0s linear .8s;padding:20px;overflow:hidden}
+#bloom.show{opacity:1;visibility:visible;transition:opacity .8s}
+.bloom-text{position:relative;z-index:2;max-width:420px;text-align:center;display:flex;flex-direction:column;gap:20px;align-items:center}
+.bloom-text p{font-family:var(--hand);font-size:clamp(1.7rem,7vw,2.2rem);line-height:1.3;color:var(--pink-dd);
+  opacity:0;transform:translateY(14px);transition:opacity 1.2s ease 1s,transform 1.2s ease 1s}
+#bloom.show .bloom-text p{opacity:1;transform:none}
+.bloom-text .btn{opacity:0;transition:opacity 1s ease 2.4s}
+#bloom.show .bloom-text .btn{opacity:1}
+.bf{position:absolute;bottom:-20px;transform-origin:bottom center;transform:scale(0) rotate(-40deg);opacity:0}
+#bloom.show .bf{animation:bloomup 1.6s cubic-bezier(.3,1.4,.5,1) forwards}
+@keyframes bloomup{to{transform:scale(1) rotate(0);opacity:1}}
+
+@media (max-width:380px){.btn{padding:12px 20px}.paper{padding:24px 16px}}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  .petal,.cloud{display:none}
+}
+</style>
+</head>
+<body>
+
+<div id="bg" aria-hidden="true">
+  <div class="glow"></div>
+</div>
+
+<div id="topbar">
+  <div id="dots" role="tablist" aria-label="Halaman"></div>
+  <button id="music" aria-pressed="false" type="button">🎵 Musik: mati</button>
+</div>
+
+<div id="app">
+
+  <!-- ========== 1. PEMBUKA ========== -->
+  <section class="page active" id="p0" aria-label="Pembuka">
+    <div class="page-inner">
+      <h1>Untuk Naura, yang Sedang Berjuang 🌷</h1>
+      <div class="env-wrap">
+        <div class="envelope" id="envelope" role="img" aria-label="Amplop surat tertutup">
+          <div class="env-back"></div>
+          <div class="env-paper">Untuk Naura 🤍</div>
+          <div class="env-front"></div>
+          <div class="env-flap"></div>
+          <div class="seal">💗</div>
+        </div>
+      </div>
+      <p class="prompt">Untuk Naura yang hari ini mungkin sedang capek banget... 🥺</p>
+      <div class="bubble">Hei, Naura. Aku tahu mungkin hari ini nggak mudah buat kamu. Jadi, sebelum kamu lanjut berjuang lagi, boleh nggak istirahat sebentar dan baca sesuatu dari aku?</div>
+      <button class="btn" id="openBtn" type="button">Buka Surat Kecil Ini 💌</button>
+    </div>
+  </section>
+
+  <!-- ========== 2. SURAT ========== -->
+  <section class="page" id="p1" aria-label="Surat">
+    <div class="page-inner">
+      <div class="paper" id="letter">
+        <p class="big">Hai, Nauraaa 🌷</p>
+        <p>Sini, istirahat sebentar, yaa.</p>
+        <p>Aku tahu kamu lagi capek banget. Laporan yang harusnya selesai malah bikin pusing, sudah dikerjakan ternyata masih ada yang salah, diperbaiki lagi, eh ternyata masih ada yang harus dibenerin. Rasanya pasti pengin rebahan sambil bilang, <span class="q">“KENAPA SIH SALAH TERUSSS 😭”</span></p>
+        <p class="big">Tapi, Naura, kamu tahu nggak?</p>
+        <p>Salah dalam mengerjakan sesuatu bukan berarti kamu nggak mampu. Kadang kamu cuma sedang kelelahan, terlalu banyak yang dipikirkan, atau memang ada bagian yang perlu dipelajari lagi. Dan itu manusiawi banget.</p>
+        <p>Kamu nggak harus selalu bisa semuanya dalam sekali coba. Kamu juga nggak harus menyelesaikan semuanya dengan sempurna hari ini.</p>
+        <p>Kalau capek, istirahat dulu. Kalau pusing, tarik napas pelan-pelan. Kalau ada yang salah, perbaiki satu per satu. Nggak perlu memikirkan semua kesalahan sekaligus sampai kamu lupa kalau dirimu juga butuh ketenangan.</p>
+        <p>Aku mungkin nggak bisa membantu mengerjakan semua laporanmu, tapi setidaknya aku ingin kamu tahu kalau ada seseorang yang berharap kamu nggak terlalu keras sama diri sendiri.</p>
+        <p>Jangan sampai kamu terlalu sibuk memperbaiki laporan sampai lupa menjaga diri sendiri, yaa. 🥺</p>
+        <p class="big">Dan satu hal lagi, Naura...</p>
+        <p>Kamu itu lebih berharga daripada sekadar laporan yang harus selesai tepat waktu.</p>
+        <p>Nilai pekerjaanmu nggak menentukan seluruh nilai dirimu. Kamu tetap seseorang yang pantas beristirahat, tersenyum, dan merasa bangga karena sudah berusaha.</p>
+        <p>Jadi, kalau hari ini kamu merasa semuanya berantakan, nggak apa-apa. Kita mulai lagi pelan-pelan besok, atau setelah kamu punya tenaga yang cukup.</p>
+        <p>Semangat, yaa, Naura. Kamu nggak harus menjadi sempurna untuk bisa menyelesaikan sesuatu dengan baik.</p>
+        <p class="sign">Dari seseorang yang diam-diam ikut berharap kamu segera tersenyum lagi...<br><strong>— GERDY 🤍</strong></p>
+      </div>
+      <div class="row">
+        <button class="btn ghost" type="button" data-go="0">← Kembali</button>
+        <button class="btn" type="button" data-go="2">Ada hadiah kecil 🎁</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 3. INTERAKTIF ========== -->
+  <section class="page" id="p2" aria-label="Hadiah kecil">
+    <div class="page-inner">
+      <div class="bear-stage" id="bearStage">
+        <svg viewBox="0 0 200 200" role="img" aria-label="Beruang kecil membawa bunga">
+          <g class="bear">
+            <!-- telinga -->
+            <circle cx="62" cy="48" r="20" fill="#d9a77c"/><circle cx="62" cy="48" r="11" fill="#f6cfd8"/>
+            <circle cx="138" cy="48" r="20" fill="#d9a77c"/><circle cx="138" cy="48" r="11" fill="#f6cfd8"/>
+            <!-- badan -->
+            <ellipse cx="100" cy="150" rx="46" ry="42" fill="#e8b98d"/>
+            <ellipse cx="100" cy="156" rx="28" ry="28" fill="#fbe3c8"/>
+            <!-- kepala -->
+            <circle cx="100" cy="82" r="44" fill="#e8b98d"/>
+            <ellipse cx="100" cy="98" rx="20" ry="15" fill="#fbe3c8"/>
+            <circle cx="84" cy="76" r="5" fill="#4a3548"/><circle cx="116" cy="76" r="5" fill="#4a3548"/>
+            <circle cx="85.8" cy="74.2" r="1.7" fill="#fff"/><circle cx="117.8" cy="74.2" r="1.7" fill="#fff"/>
+            <ellipse cx="100" cy="92" rx="6" ry="4.5" fill="#4a3548"/>
+            <path d="M92 101 Q100 108 108 101" stroke="#4a3548" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <circle cx="70" cy="94" r="7" fill="#f6a9c0" opacity=".7"/><circle cx="130" cy="94" r="7" fill="#f6a9c0" opacity=".7"/>
+            <!-- bantal -->
+            <g class="pillow">
+              <rect x="66" y="128" width="68" height="46" rx="16" fill="#d9c8f3" stroke="#b79be6" stroke-width="2"/>
+              <path d="M100 160 C84 148 90 138 100 146 C110 138 116 148 100 160Z" fill="#f59abb"/>
+            </g>
+            <!-- lengan -->
+            <ellipse class="arm l" cx="62" cy="150" rx="12" ry="22" fill="#d9a77c" transform="rotate(14 62 150)"/>
+            <ellipse class="arm r" cx="138" cy="150" rx="12" ry="22" fill="#d9a77c" transform="rotate(-14 138 150)"/>
+            <!-- bunga -->
+            <g class="flower-held">
+              <line x1="152" y1="170" x2="156" y2="128" stroke="#7fb77e" stroke-width="3" stroke-linecap="round"/>
+              <g transform="translate(156 122)">
+                <circle cx="0" cy="-9" r="6.5" fill="#f59abb"/><circle cx="9" cy="-2" r="6.5" fill="#f59abb"/>
+                <circle cx="5" cy="8" r="6.5" fill="#f59abb"/><circle cx="-5" cy="8" r="6.5" fill="#f59abb"/>
+                <circle cx="-9" cy="-2" r="6.5" fill="#f59abb"/><circle cx="0" cy="0" r="5" fill="#ffe28a"/>
+              </g>
+            </g>
+          </g>
+        </svg>
+      </div>
+      <p class="prompt">Sekarang, giliran kamu yang istirahat sebentar! Pilih hadiah kecilmu di bawah ini. 🎁</p>
+      <div class="gifts">
+        <button class="btn" type="button" id="gHug">Peluk Virtual 🧸</button>
+        <button class="btn" type="button" id="gBoost">Suntikan Semangat ✨</button>
+        <button class="btn" type="button" id="gGombal">Buka Gombalan Receh 😭</button>
+      </div>
+      <div class="result" id="result" aria-live="polite">Pilih salah satu hadiah di atas, yaa. Pelan-pelan aja. 🌷</div>
+      <div class="row">
+        <button class="btn ghost" type="button" data-go="1">← Baca surat lagi</button>
+        <button class="btn" type="button" data-go="3">Malam yang tenang 🌙</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 4. TERAKHIR ========== -->
+  <section class="page" id="p3" aria-label="Penutup">
+    <div class="page-inner">
+      <svg class="moon" viewBox="0 0 100 100" aria-label="Bulan sabit" role="img">
+        <defs><radialGradient id="mg" cx="40%" cy="35%"><stop offset="0" stop-color="#fffbe0"/><stop offset="1" stop-color="#ffe9a8"/></radialGradient></defs>
+        <path d="M68 12 A40 40 0 1 0 88 66 A32 32 0 1 1 68 12Z" fill="url(#mg)"/>
+      </svg>
+      <div class="final-card">
+        <p>Naura, terima kasih sudah bertahan sampai hari ini. 🤍</p>
+        <p>Aku harap setelah membaca surat kecil ini, beban di pikiranmu bisa terasa sedikit lebih ringan.</p>
+        <p>Nggak apa-apa kalau hari ini belum sempurna. Nggak apa-apa kalau kamu perlu menangis sebentar. Nggak apa-apa kalau kamu butuh waktu untuk mengumpulkan semangat lagi.</p>
+        <p>Jangan lupa makan, minum air putih, dan istirahat, yaa.</p>
+        <p>Besok kita coba lagi. Satu halaman, satu revisi, satu langkah kecil dalam satu waktu.</p>
+        <p>Semangat terus, Nauraaa! Kamu sudah berusaha, dan itu layak dihargai. 🌷</p>
+        <p class="from">Dari:<br>GERDY — teman yang berharap hari-harimu terasa sedikit lebih ringan.</p>
+      </div>
+      <div class="sway-flowers" aria-hidden="true"><span>🌷</span><span>🌸</span><span>🌼</span><span>🌸</span><span>🌷</span></div>
+      <button class="btn" type="button" id="thanksBtn">Makasih, Gerdy 🤍</button>
+      <button class="btn ghost" type="button" data-go="2">← Kembali</button>
+    </div>
+  </section>
+</div>
+
+<!-- Bloom overlay -->
+<div id="bloom" role="dialog" aria-label="Pesan penutup">
+  <div class="bloom-text">
+    <p>Hehe, sekarang senyum sedikit dong, Nauraaa! Jangan kalah sama laporan, yaa. Kamu pasti bisa melewatinya pelan-pelan. 🥹🌷</p>
+    <button class="btn" type="button" id="againBtn">Baca dari awal 💌</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $ = function(s,r){return (r||document).querySelector(s)};
+  var $$ = function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- Background (ringan) ---------- */
+  var bg = $("#bg");
+  function rnd(a,b){return a+Math.random()*(b-a)}
+  for(var i=0;i<4;i++){
+    var c=document.createElement("div"); c.className="cloud";
+    var w=rnd(90,150); c.style.cssText="width:"+w+"px;height:"+(w*.32)+"px;top:"+rnd(6,60)+"vh;animation-duration:"+rnd(70,120)+"s;animation-delay:-"+rnd(0,100)+"s";
+    bg.appendChild(c);
+  }
+  for(i=0;i<26;i++){
+    var s=document.createElement("div"); s.className="star";
+    s.style.cssText="left:"+rnd(0,100)+"vw;top:"+rnd(0,85)+"vh;animation-delay:-"+rnd(0,3)+"s;animation-duration:"+rnd(2.4,4.5)+"s;transform:scale("+rnd(.6,1.2)+")";
+    bg.appendChild(s);
+  }
+  for(i=0;i<12;i++){
+    var p=document.createElement("div"); p.className="petal";
+    p.style.cssText="left:"+rnd(0,100)+"vw;animation-duration:"+rnd(11,20)+"s;animation-delay:-"+rnd(0,18)+"s;width:"+rnd(10,16)+"px;height:"+rnd(13,20)+"px";
+    bg.appendChild(p);
+  }
+
+  /* ---------- Navigasi halaman ---------- */
+  var pages = $$(".page"), current = 0, visited = {0:true}, dotsBox = $("#dots");
+  var names = ["Pembuka","Surat","Hadiah","Penutup"];
+  pages.forEach(function(_,idx){
+    var d=document.createElement("button"); d.type="button"; d.className="dot"; d.setAttribute("aria-label",names[idx]);
+    d.addEventListener("click",function(){ if(visited[idx]) go(idx); });
+    dotsBox.appendChild(d);
+  });
+  function renderDots(){
+    $$(".dot").forEach(function(d,idx){
+      d.classList.toggle("visited",!!visited[idx]);
+      d.classList.toggle("current",idx===current);
+    });
+  }
+  function go(n){
+    if(n===current) return;
+    pages[current].classList.remove("active");
+    current=n; visited[n]=true;
+    var pg=pages[n]; pg.classList.add("active"); pg.scrollTop=0;
+    document.body.classList.toggle("night", n===3);
+    renderDots();
+    if(n===1) revealLetter();
+  }
+  $$("[data-go]").forEach(function(b){ b.addEventListener("click",function(){ go(parseInt(b.getAttribute("data-go"),10)); }); });
+  renderDots();
+
+  /* ---------- Amplop ---------- */
+  var env=$("#envelope"), opened=false;
+  function openEnvelope(){
+    if(opened) return; opened=true;
+    env.classList.add("open"); env.setAttribute("aria-label","Amplop surat terbuka");
+    setTimeout(function(){ go(1); }, reduce?100:1500);
+  }
+  $("#openBtn").addEventListener("click",openEnvelope);
+  env.addEventListener("click",openEnvelope);
+
+  /* ---------- Surat: muncul pelan-pelan ---------- */
+  var letterRevealed=false;
+  function revealLetter(){
+    var ps=$$("#letter p");
+    if(letterRevealed){ ps.forEach(function(p){p.classList.add("show")}); return; }
+    letterRevealed=true;
+    var scroller=pages[1];
+    if("IntersectionObserver" in window){
+      var io=new IntersectionObserver(function(es){
+        es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add("show"); io.unobserve(e.target);} });
+      },{root:scroller,threshold:.25});
+      ps.forEach(function(p){io.observe(p)});
+    } else ps.forEach(function(p){p.classList.add("show")});
+  }
+
+  /* ---------- Hadiah ---------- */
+  var result=$("#result"), stage=$("#bearStage");
+  function say(html){
+    result.innerHTML=html; result.classList.remove("pop"); void result.offsetWidth; result.classList.add("pop");
+  }
+  function hearts(){
+    var set=["💗","🤍","🌷","✨","💜"];
+    for(var i=0;i<6;i++){
+      (function(i){
+        setTimeout(function(){
+          var h=document.createElement("span"); h.className="heart-up"; h.textContent=set[i%set.length];
+          h.style.left=(25+Math.random()*50)+"%"; stage.appendChild(h);
+          setTimeout(function(){h.remove()},2300);
+        },i*220);
+      })(i);
+    }
+  }
+  var boosts=[
+    "Satu kesalahan bukan akhir dari semuanya.",
+    "Pelan-pelan juga tetap sebuah kemajuan.",
+    "Istirahat bukan berarti menyerah.",
+    "Naura, kamu boleh capek, tapi jangan lupa menghargai dirimu sendiri.",
+    "Nggak harus selesai sekaligus. Satu langkah kecil pun berarti."
+  ];
+  var gombals=[
+    "Naura, tahu nggak bedanya kamu sama laporan? Kalau laporan bikin pusing, kalau kamu bikin aku senyum-senyum sendiri. 😭",
+    "Laporan boleh banyak revisi, tapi doa supaya kamu bahagia nggak pernah aku revisi.",
+    "Kalau semangatmu tinggal 1%, sini aku bantu isi ulang. Tapi kalau yang penuh malah pikiranmu, kita kosongkan pelan-pelan, yaa.",
+    "Kamu jangan menyerah, ya. Bahkan file yang namanya FINAL_REVISI_FIX_BENERAN pun akhirnya bisa selesai. WKWKWK 😭"
+  ];
+  function picker(list){
+    var last=-1;
+    return function(){
+      var n; do{ n=Math.floor(Math.random()*list.length); }while(list.length>1 && n===last);
+      last=n; return list[n];
+    };
+  }
+  var nextBoost=picker(boosts), nextGombal=picker(gombals), hugTimer=null;
+
+  $("#gHug").addEventListener("click",function(){
+    stage.classList.add("hug"); hearts();
+    clearTimeout(hugTimer); hugTimer=setTimeout(function(){stage.classList.remove("hug")},5200);
+    say("🧸 Peluk virtual dari Gerdy! Semoga sedikit mengurangi capeknya, yaa. Kamu sudah berusaha sejauh ini.");
+  });
+  $("#gBoost").addEventListener("click",function(){
+    stage.classList.remove("hug"); say("✨ "+nextBoost());
+  });
+  $("#gGombal").addEventListener("click",function(){
+    stage.classList.remove("hug"); say("😭 "+nextGombal());
+  });
+
+  /* ---------- Penutup & bunga bermekaran ---------- */
+  var bloom=$("#bloom"), built=false;
+  function buildBloom(){
+    if(built) return; built=true;
+    var colors=["#f59abb","#c79af0","#ffb78a","#f7d36b","#ee8fb0"];
+    for(var i=0;i<14;i++){
+      var d=document.createElement("div"); d.className="bf";
+      var h=rnd(90,230), col=colors[i%colors.length], size=rnd(34,60);
+      d.style.left=(3+i*7)+"%"; d.style.animationDelay=(rnd(0,1.2))+"s";
+      d.innerHTML='<svg width="'+size+'" height="'+(h+size)+'" viewBox="0 0 '+size+' '+(h+size)+'">'+
+        '<line x1="'+size/2+'" y1="'+size*0.9+'" x2="'+size/2+'" y2="'+(h+size)+'" stroke="#7fb77e" stroke-width="3" stroke-linecap="round"/>'+
+        '<g transform="translate('+size/2+' '+size*0.45+')" fill="'+col+'">'+
+        [0,72,144,216,288].map(function(a){return '<ellipse cx="0" cy="-'+size*0.25+'" rx="'+size*0.16+'" ry="'+size*0.24+'" transform="rotate('+a+')"/>'}).join("")+
+        '<circle r="'+size*0.13+'" fill="#ffe28a"/></g></svg>';
+      bloom.appendChild(d);
+    }
+  }
+  $("#thanksBtn").addEventListener("click",function(){ buildBloom(); bloom.classList.add("show"); });
+  $("#againBtn").addEventListener("click",function(){
+    bloom.classList.remove("show"); go(0);
+    env.classList.remove("open"); opened=false;
+  });
+
+  /* ---------- Musik piano lembut (disintesis, hanya mulai saat tombol ditekan) ---------- */
+  var ctx=null, master=null, timer=null, playing=false, nextT=0, step=0;
+  var chords=[[220.00,261.63,329.63],[174.61,220.00,261.63],[261.63,329.63,392.00],[196.00,246.94,293.66]];
+  var pattern=[0,1,2,1,2,1,2,1];
+  var btn=$("#music");
+  function tone(freq,t,dur,vol){
+    var o=ctx.createOscillator(), o2=ctx.createOscillator(), g=ctx.createGain();
+    o.type="triangle"; o2.type="sine"; o.frequency.value=freq; o2.frequency.value=freq*2;
+    var g2=ctx.createGain(); g2.gain.value=.25;
+    g.gain.setValueAtTime(0.0001,t);
+    g.gain.exponentialRampToValueAtTime(vol,t+.02);
+    g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+    o.connect(g); o2.connect(g2); g2.connect(g); g.connect(master);
+    o.start(t); o2.start(t); o.stop(t+dur+.05); o2.stop(t+dur+.05);
+  }
+  function schedule(){
+    while(nextT<ctx.currentTime+.6){
+      var bar=Math.floor(step/8)%chords.length, pos=step%8, ch=chords[bar];
+      if(pos===0) tone(ch[0]/2,nextT,3.4,.16);
+      tone(ch[pattern[pos]]*(pos%4===2?2:1),nextT,1.8,.09);
+      nextT+=.55; step++;
+    }
+  }
+  function startMusic(){
+    var AC=window.AudioContext||window.webkitAudioContext;
+    if(!AC){ btn.textContent="🎵 Tidak didukung"; return; }
+    if(!ctx){
+      ctx=new AC(); master=ctx.createGain(); master.gain.value=.55;
+      var dl=ctx.createDelay(1); dl.delayTime.value=.38; var fb=ctx.createGain(); fb.gain.value=.32;
+      dl.connect(fb); fb.connect(dl); master.connect(dl); dl.connect(ctx.destination); master.connect(ctx.destination);
+    }
+    ctx.resume(); nextT=ctx.currentTime+.1; step=0;
+    clearInterval(timer); timer=setInterval(schedule,200); schedule();
+    playing=true; btn.setAttribute("aria-pressed","true"); btn.textContent="🎵 Musik: nyala";
+  }
+  function stopMusic(){
+    clearInterval(timer); if(ctx) ctx.suspend();
+    playing=false; btn.setAttribute("aria-pressed","false"); btn.textContent="🎵 Musik: mati";
+  }
+  btn.addEventListener("click",function(){ playing?stopMusic():startMusic(); });
+  document.addEventListener("visibilitychange",function(){ if(document.hidden && playing) stopMusic(); });
+})();
+</script>
+</body>
+</html>
